@@ -108,7 +108,7 @@ T tiff_get(const tif_holder& t, const int tag) {
     return val;
 }
 
-template <>
+/*template <>
 inline
 std::string tiff_get<std::string>(const tif_holder& t, const int tag) {
     char* val;
@@ -118,7 +118,7 @@ std::string tiff_get<std::string>(const tif_holder& t, const int tag) {
         throw CannotReadError(out.str());
     }
     return val;
-}
+}*/
 
 template <typename T>
 inline

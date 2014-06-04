@@ -73,8 +73,8 @@ extensions = {
 
 
 libraries = ['png', 'jpeg', 'tiff', 'z']
-# if sys.platform.startswith('win'):
-    # libraries.append('zlib')
+if sys.platform.startswith('win'):
+    libraries.append('zlib')
 
 if not EXCLUDE_WEBP:
     extensions['imread._imread'].append('imread/lib/_webp.cpp')
