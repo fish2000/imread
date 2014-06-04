@@ -337,12 +337,12 @@ void TIFFFormat::write(Image* input, byte_sink* output, const options_map& opts)
     }
 
     options_map::const_iterator y_iter = opts.find("tiff:YResolution");
-    if (x_iter != opts.end()) {
+    if (y_iter != opts.end()) {
         double d;
         int i;
         float value;
-        if (x_iter->second.get_int(i)) { value = i; }
-        else if (x_iter->second.get_double(d)) { value = d; }
+        if (y_iter->second.get_int(i)) { value = i; }
+        else if (y_iter->second.get_double(d)) { value = d; }
         else { throw WriteOptionsError("YResolution must be an integer or floating point value."); }
 
         TIFFSetField(t.tif, TIFFTAG_YRESOLUTION, value);
