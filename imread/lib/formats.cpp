@@ -12,6 +12,8 @@
 #include "_webp.h"
 #endif
 
+#include "_pvrtc.h"
+
 #include <cstring>
 
 std::auto_ptr<ImageFormat> get_format(const char* format) {
@@ -27,6 +29,9 @@ std::auto_ptr<ImageFormat> get_format(const char* format) {
     if (!strcmp(format, "webp")) return std::auto_ptr<ImageFormat>(new WebPFormat);
 #endif
 
+    if (!strcmp(format, "pvr")) return std::auto_ptr<ImageFormat>(new PVRTCFormat);
+    if (!strcmp(format, "pvrtc")) return std::auto_ptr<ImageFormat>(new PVRTCFormat);
+    
     if (!strcmp(format, "stk")) return std::auto_ptr<ImageFormat>(new STKFormat);
     if (!strcmp(format, "bmp")) return std::auto_ptr<ImageFormat>(new BMPFormat);
     return std::auto_ptr<ImageFormat>(0);

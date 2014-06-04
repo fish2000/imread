@@ -58,6 +58,8 @@ extensions = {
         'imread/lib/_lsm.cpp',
         'imread/lib/_png.cpp',
         'imread/lib/_tiff.cpp',
+        'imread/lib/_webp.cpp',
+        'imread/lib/_pvrtc.cpp',
         ],
 }
 
