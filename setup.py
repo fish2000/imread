@@ -71,7 +71,7 @@ if sys.platform.startswith('win'):
     libraries.append('zlib')
 
 if not EXCLUDE_WEBP:
-    extensions['imread._imread'].append('imread/lib/_webp.cpp')
+    #extensions['imread._imread'].append('imread/lib/_webp.cpp')
     libraries.append('webp')
 
 ext_modules = [

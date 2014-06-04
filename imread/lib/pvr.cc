@@ -155,7 +155,7 @@ bool PVRTexture::loadApplePVRTC(uint8_t* data, int size)
         if(shift==10)
             // no mode could be found.
             return false;
-        printf("detected apple %ix%i %i bpp pvrtc\n", res, res, mode*2+2);
+        //printf("detected apple %ix%i %i bpp pvrtc\n", res, res, mode*2+2);
     }
 
     // there is no reliable way to know if it's a 2bpp or 4bpp file. Assuming
@@ -185,11 +185,13 @@ bool PVRTexture::loadApplePVRTC(uint8_t* data, int size)
     return true;
 }
 
-ePVRLoadResult PVRTexture::load(const char *const path)
+//ePVRLoadResult PVRTexture::load(const char *const path)
+ePVRLoadResult PVRTexture::load(uint8_t* data, unsigned int length)
 {
-    uint8_t *data;
-    unsigned int length;
-
+    //uint8_t *data;
+    //unsigned int length;
+    
+    /*
     FILE *fp = fopen(path, "rb");
     if(fp==NULL)
         return PVR_LOAD_FILE_NOT_FOUND;
@@ -202,6 +204,7 @@ ePVRLoadResult PVRTexture::load(const char *const path)
     fread(data, 1, length, fp);
 
     fclose(fp);
+    */
 
     // use a heuristic to detect potential apple PVRTC formats
     if(countBits(length)==1)
@@ -213,7 +216,7 @@ ePVRLoadResult PVRTexture::load(const char *const path)
 
     if(length<sizeof(PVRHeader))
     {
-        free(data);
+        //free(data);
         return PVR_LOAD_INVALID_FILE;
     }
 
@@ -224,13 +227,13 @@ ePVRLoadResult PVRTexture::load(const char *const path)
 
     if( header->size != sizeof( PVRHeader ) )
     {
-        free( data );
+        //free( data );
         return PVR_LOAD_INVALID_FILE;
     }
 
     if( header->magic != 0x21525650 )
     {
-        free( data );
+        //free( data );
         return PVR_LOAD_INVALID_FILE;
     }
 
@@ -241,7 +244,7 @@ ePVRLoadResult PVRTexture::load(const char *const path)
 
     if( header->numtex != 1 )
     {
-        free( data );
+        //free( data );
         return PVR_LOAD_MORE_THAN_ONE_SURFACE;
     }
 
@@ -251,15 +254,15 @@ ePVRLoadResult PVRTexture::load(const char *const path)
     }
 
     int ptype = header->flags & PVR_PIXELTYPE_MASK;
-    printf("Pixeltype: 0x%02x\n", ptype);
+    //printf("Pixeltype: 0x%02x\n", ptype);
 
     this->width = header->width;
     this->height = header->height;
     this->numMips = header->mipcount;
     this->bpp = header->bpp;
 
-    printf("Width: %i\n", this->width);
-    printf("Height: %i\n", this->height);
+    //printf("Width: %i\n", this->width);
+    //printf("Height: %i\n", this->height);
 
     this->data = (uint8_t*)malloc(this->width*this->height*4);
 
@@ -346,8 +349,8 @@ ePVRLoadResult PVRTexture::load(const char *const path)
 
                 if(x==128&&y==128)
                 {
-                    printf("%04x\n", v);
-                    printf("%i %i %i\n", r, g, b);
+                    //printf("%04x\n", v);
+                    //printf("%i %i %i\n", r, g, b);
                 }
 
                 *out++ = r;
@@ -437,13 +440,13 @@ ePVRLoadResult PVRTexture::load(const char *const path)
                     this->height, 1, this->data);
         } break;
     default:
-        printf("unknown PVR type %i!\n", ptype);
+        //printf("unknown PVR type %i!\n", ptype);
         free(this->data);
         this->data = NULL;
-        free(data);
+        //free(data);
         return PVR_LOAD_UNKNOWN_TYPE;
     }
 
-    free(data);
+    //free(data);
     return PVR_LOAD_OKAY;
 }

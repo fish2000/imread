@@ -60,8 +60,8 @@ struct PVRTexture
 {
     PVRTexture();
     ~PVRTexture();
-    ePVRLoadResult load(const char *const path);
-
+    
+    ePVRLoadResult load(uint8_t* data, unsigned int size);
     bool loadApplePVRTC(uint8_t* data, int size);
 
     unsigned int width;

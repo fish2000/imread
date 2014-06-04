@@ -22,7 +22,7 @@ std::auto_ptr<ImageFormat> get_format(const char* format) {
     if (!strcmp(format, "jpeg") || !strcmp(format, "jpg")) return std::auto_ptr<ImageFormat>(new JPEGFormat);
     if (!strcmp(format, "lsm")) return std::auto_ptr<ImageFormat>(new LSMFormat);
     if (!strcmp(format, "tiff") || !strcmp(format, "tif")) return std::auto_ptr<ImageFormat>(new TIFFFormat);
-
+    
 #if IMREAD_EXCLUDE_WEBP
     if (!strcmp(format, "webp")) return std::auto_ptr<ImageFormat>(0);
 #else
