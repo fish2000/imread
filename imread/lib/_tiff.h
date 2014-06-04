@@ -35,7 +35,7 @@ class STKFormat : public ImageFormat {
         bool can_read_multi() const { return true; }
         bool can_write() const { return false; }
 
-        std::auto_ptr<image_list> read_multi(byte_source* s, ImageFactory* f);
+        std::auto_ptr<image_list> read_multi(byte_source* s, ImageFactory* f, const options_map& opts);
 };
 
 

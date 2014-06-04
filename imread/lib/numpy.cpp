@@ -1,7 +1,10 @@
+
 #define NO_IMPORT_ARRAY
+
 #include <cstring>
 #include <vector>
 #include "numpy.h"
+
 void NumpyImage::finalize() {
     if (PyArray_TYPE(array_) == NPY_BOOL) {
         // We need to expand this

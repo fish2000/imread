@@ -205,7 +205,7 @@ struct stk_extend {
 } // namespace
 
 
-std::auto_ptr<image_list> STKFormat::read_multi(byte_source* src, ImageFactory* factory) {
+std::auto_ptr<image_list> STKFormat::read_multi(byte_source* src, ImageFactory* factory, const options_map& opts) {
     shift_source moved(src);
     stk_extend ext;
     tiff_warn_error twe;

@@ -40,8 +40,9 @@
 */
 
 #include "_lsm.h"
+
 namespace {
-#include "lzw.cpp"
+    #include "lzw.cpp"
 }
 
 #define TIF_NEWSUBFILETYPE 254

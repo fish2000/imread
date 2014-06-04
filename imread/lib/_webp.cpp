@@ -7,7 +7,7 @@
 
 #include <webp/decode.h>
 
-std::auto_ptr<Image> WebPFormat::read(byte_source* src, ImageFactory* factory) {
+std::auto_ptr<Image> WebPFormat::read(byte_source* src, ImageFactory* factory, const options_map&) {
     std::vector<byte> data = full_data(*src);
     int w, h;
     int ok = WebPGetInfo(&data[0], data.size(), &w, &h);

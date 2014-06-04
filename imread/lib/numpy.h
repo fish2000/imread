@@ -3,12 +3,13 @@
 
 #ifndef LPC_NUMPY_H_INCLUDE_GUARD_WED_FEB__1_16_34_50_WET_2012
 #define LPC_NUMPY_H_INCLUDE_GUARD_WED_FEB__1_16_34_50_WET_2012
-#include <memory>
-#include <sstream>
-#include "base.h"
 
 #include <Python.h>
 #include <numpy/ndarrayobject.h>
+
+#include <memory>
+#include <sstream>
+#include "base.h"
 
 class NumpyImage : public Image, public ImageWithMetadata {
     public:

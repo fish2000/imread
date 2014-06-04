@@ -142,7 +142,7 @@ J_COLOR_SPACE color_space(int components) {
 
 } // namespace
 
-std::auto_ptr<Image> JPEGFormat::read(byte_source* src, ImageFactory* factory, const options_map&) {
+std::auto_ptr<Image> JPEGFormat::read(byte_source* src, ImageFactory* factory, const options_map& opts) {
     jpeg_source_adaptor adaptor(src);
     jpeg_decompress_holder c;
 

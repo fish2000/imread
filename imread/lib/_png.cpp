@@ -5,7 +5,7 @@
 #include "_png.h"
 #include "tools.h"
 
-#include <png.h>
+#include <libpng16/png.h>
 
 #include <cstring>
 #include <vector>

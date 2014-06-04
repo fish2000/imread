@@ -21,21 +21,28 @@ import numpy.distutils.core as numpyutils
 
 exec(compile(open('imread/imread_version.py').read(), 
              'imread/imread_version.py', 'exec'))
+
 long_description = open('README.rst').read()
 
 undef_macros = []
 define_macros = []
+
 if os.environ.get('DEBUG'):
     undef_macros = ['NDEBUG']
     if os.environ.get('DEBUG') == '2':
-        define_macros.append( ('_GLIBCXX_DEBUG','1') )
-define_macros.append(('NPY_NO_DEPRECATED_API','NPY_1_7_API_VERSION'))
-define_macros.append(('PY_ARRAY_UNIQUE_SYMBOL','MahotasImread_PyArray_API_Symbol'))
+        define_macros.append(
+            ('_GLIBCXX_DEBUG', '1'))
+
+define_macros.append(
+    ('NPY_NO_DEPRECATED_API', 'NPY_1_7_API_VERSION'))
+define_macros.append(
+    ('PY_ARRAY_UNIQUE_SYMBOL', 'MahotasImread_PyArray_API_Symbol'))
 
 EXCLUDE_WEBP = os.environ.get('EXCLUDE_WEBP', False)
 
 if EXCLUDE_WEBP:
-    define_macros.append( ('IMREAD_EXCLUDE_WEBP', '1') )
+    define_macros.append(
+        ('IMREAD_EXCLUDE_WEBP', '1'))
 
 include_dirs = []
 library_dirs = []
@@ -53,24 +60,24 @@ extensions = {
         'imread/_imread.cpp',
         'imread/lib/formats.cpp',
         'imread/lib/numpy.cpp',
-        #'imread/lib/pvrtc.cpp',
+        'imread/lib/pvrtc.cpp',
         'imread/lib/pvr.cpp',
         'imread/lib/_bmp.cpp',
         'imread/lib/_jpeg.cpp',
         'imread/lib/_lsm.cpp',
         'imread/lib/_png.cpp',
         'imread/lib/_tiff.cpp',
-        'imread/lib/_webp.cpp',
         'imread/lib/_pvrtc.cpp',
         ],
 }
 
 
-libraries = ['png', 'jpeg', 'tiff']
-if sys.platform.startswith('win'):
-    libraries.append('zlib')
+libraries = ['png', 'jpeg', 'tiff', 'z']
+# if sys.platform.startswith('win'):
+    # libraries.append('zlib')
 
 if not EXCLUDE_WEBP:
+    extensions['imread._imread'].append('imread/lib/_webp.cpp')
     libraries.append('webp')
 
 ext_modules = [
@@ -85,10 +92,8 @@ ext_modules = [
         ) for key, sources in extensions.items()]
 
 packages = setuptools.find_packages()
-
-package_dir = {
-    'imread.tests': 'imread/tests',
-    }
+package_dir = { 'imread.tests': 'imread/tests' }
+package_data = { 'imread.tests': ['data/*'] }
 
 classifiers = [
 'Development Status :: 4 - Beta',
@@ -103,19 +108,19 @@ classifiers = [
 'License :: OSI Approved :: MIT License',
 ]
 
-numpyutils.setup(name = 'imread',
-      version = __version__,
-      description = 'imread: Image reading library',
-      long_description = long_description,
-      author = 'Luis Pedro Coelho',
-      author_email = 'luis@luispedro.org',
-      license = 'MIT',
-      platforms = ['Any'],
-      classifiers = classifiers,
-      url = 'http://luispedro.org/software/imread',
-      packages = packages,
-      ext_modules = ext_modules,
-      package_dir = package_dir,
-      include_package_data = True,
-      test_suite = 'nose.collector',
+numpyutils.setup(name='imread',
+      version=__version__,
+      description='imread: Image reading library',
+      long_description=long_description,
+      author='Luis Pedro Coelho',
+      author_email='luis@luispedro.org',
+      license='MIT',
+      platforms=['Any'],
+      classifiers=classifiers,
+      url='http://luispedro.org/software/imread',
+      packages=packages,
+      ext_modules=ext_modules,
+      package_dir=package_dir,
+      include_package_data=True,
+      test_suite='nose.collector',
       )

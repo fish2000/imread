@@ -3,6 +3,7 @@
 
 #ifndef LPC_FORMATS_H_INCLUDE_GUARD_WED_FEB__1_16_34_50_WET_2012
 #define LPC_FORMATS_H_INCLUDE_GUARD_WED_FEB__1_16_34_50_WET_2012
+
 #include "base.h"
 #include <memory>
 

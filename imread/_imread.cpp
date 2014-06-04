@@ -21,6 +21,7 @@
 #include "lib/file.h"
 #include "lib/memory.h"
 #include "lib/numpy.h"
+
 #include <Python.h>
 #include <numpy/ndarrayobject.h>
 #include <errno.h>
