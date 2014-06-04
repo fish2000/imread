@@ -8,7 +8,7 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-imread_version = '0.3.2+git'
+imread_version = '0.3.3+git'
 import sys, os
 
 # If extensions (or modules to document with autodoc) are in another directory,

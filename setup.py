@@ -53,8 +53,8 @@ extensions = {
         'imread/_imread.cpp',
         'imread/lib/formats.cpp',
         'imread/lib/numpy.cpp',
-        'imread/lib/pvrtc.cc',
-        'imread/lib/pvr.cc',
+        #'imread/lib/pvrtc.cpp',
+        'imread/lib/pvr.cpp',
         'imread/lib/_bmp.cpp',
         'imread/lib/_jpeg.cpp',
         'imread/lib/_lsm.cpp',
@@ -71,7 +71,6 @@ if sys.platform.startswith('win'):
     libraries.append('zlib')
 
 if not EXCLUDE_WEBP:
-    #extensions['imread._imread'].append('imread/lib/_webp.cpp')
     libraries.append('webp')
 
 ext_modules = [

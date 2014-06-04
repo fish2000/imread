@@ -13,26 +13,26 @@ imwrite
 
 That's it.
 
-This needs to be used with a a computer vision & image processing packages:
+Imread is to be used with computer vision & image processing packages:
 
 - `mahotas <http://luispedro.org/software/mahotas>`__
 - `scikit-image <http://scikit-image.org/>`__
 - `OpenCV <http://opencv.willowgarage.com/wiki/>`__
 
 
-This grew out of frustration at current image loading solutions in Python, in
-either my packages [`mahotas <http://mahotas.rtfd.org>`__] or packages from
-others [`scikit-image <http://scikit-image.org>`__, for example].
+Imread grew out of frustration at current image-loading solutions in Python, in
+either my own packages, e.g. [`mahotas <http://mahotas.rtfd.org>`__], or in those
+written by others, such as [`scikit-image <http://scikit-image.org>`__, for example].
 
-The relationship with numpy is very contained and this could be easily
-repurposed to load images in other frameworks, even other programming
+Imread’s relationship with numpy is very contained, and thus could be easily
+repurposed as an image-loader for use in other frameworks – even other programming
 languages.
 
 Citation
 --------
 
-This package is an off-shoot of mahotas. As it, currently, does not have its
-own publication, so you are asked to cite the mother package: If you use
+This package is an off-shoot of mahotas. As it currently does not have its
+own publication, you are asked to cite the parent package. If you use
 imread-mahotas on a scientific publication, please cite:
 
     **Luis Pedro Coelho** Mahotas: Open source software for scriptable computer
