@@ -5,7 +5,7 @@ fast: imread/*.cpp imread/lib/*.h imread/lib/*.cpp
 	python setup.py build --build-lib=.
 
 clean:
-	rm -rf build imread/*.so imread/lib/*.so
+	rm -rf build dist imread.egg-info imread/*.so imread/lib/*.so
 
 tests: debug
 	nosetests -vx
