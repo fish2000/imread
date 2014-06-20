@@ -101,8 +101,8 @@ submissions, etc.
 Travis Build Status
 ~~~~~~~~~~~~~~~~~~~
 
-.. image:: https://travis-ci.org/luispedro/imread.png
-       :target: https://travis-ci.org/luispedro/imread
+.. image:: https://travis-ci.org/fish2000/imread.png
+       :target: https://travis-ci.org/fish2000/imread
 
 Python versions 2.6, 2.7 and 3.3 are officially supported.
 
