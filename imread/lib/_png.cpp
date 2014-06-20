@@ -5,7 +5,11 @@
 #include "_png.h"
 #include "tools.h"
 
-#include <libpng16/png.h>
+#ifdef __APPLE__
+    #include <libpng16/png.h>   /* this is the Homebrew path */
+#else
+    #include <png.h>            /* this is the standard location */
+#endif
 
 #include <cstring>
 #include <vector>
