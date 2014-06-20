@@ -1,6 +1,7 @@
 // Copyright 2012 Luis Pedro Coelho <luis@luispedro.org>
 // License: MIT (see COPYING.MIT file)
 
+#include <string.h>
 #include "base.h"
 #include "_pvrtc.h"
 #include "tools.h"
