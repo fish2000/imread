@@ -12,8 +12,6 @@ std::auto_ptr<Image> PVRTCFormat::read(byte_source* src, ImageFactory* factory, 
     std::vector<byte> data = full_data(*src);
     PVRTexture pvr;
 
-    //bool res = pvr.loadApplePVRTC(&data[0], data.size());
-    //ePVRLoadResult
     int res = pvr.load(&data[0], data.size());
     
     if (res) {
@@ -21,8 +19,8 @@ std::auto_ptr<Image> PVRTCFormat::read(byte_source* src, ImageFactory* factory, 
     }
 
     std::auto_ptr<Image> output(factory->create(8, pvr.height, pvr.width, 4));
+    
     if (pvr.data) {
-        /* clearly this is not the best approach */
         uint8_t* rowp = output->rowp_as<uint8_t>(0);
         memcpy(&rowp, &pvr.data[0], pvr.width*pvr.height*4);
     } else {
