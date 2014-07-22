@@ -3,4 +3,6 @@ include ChangeLog
 include COPYING.MIT
 include imread/lib/*cpp
 include docs/source/*.rst
-recursive-include imread/tests/data *
+include imread/tests/data/pvrsamples/*.pvr
+include imread/tests/data/pvrsamples/pngreference.png
+include imread/tests/data/*.*

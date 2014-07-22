@@ -92,7 +92,7 @@ ext_modules = [
 
 packages = setuptools.find_packages()
 package_dir = { 'imread.tests': 'imread/tests' }
-package_data = { 'imread.tests': ['data/*'] }
+package_data = { 'imread.tests': ['data/*.*', 'data/pvrsamples/*'] }
 
 classifiers = [
 'Development Status :: 4 - Beta',
