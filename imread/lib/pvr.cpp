@@ -210,13 +210,11 @@ ePVRLoadResult PVRTexture::load(uint8_t* data, unsigned int length)
 
     if( header->size != sizeof( PVRHeader ) )
     {
-        //free( data );
         return PVR_LOAD_INVALID_FILE;
     }
 
     if( header->magic != 0x21525650 )
     {
-        //free( data );
         return PVR_LOAD_INVALID_FILE;
     }
 
@@ -227,7 +225,6 @@ ePVRLoadResult PVRTexture::load(uint8_t* data, unsigned int length)
 
     if( header->numtex != 1 )
     {
-        //free( data );
         return PVR_LOAD_MORE_THAN_ONE_SURFACE;
     }
 
