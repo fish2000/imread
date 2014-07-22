@@ -31,7 +31,7 @@ std::auto_ptr<Image> PVRTCFormat::read(byte_source* src, ImageFactory* factory, 
     std::auto_ptr<Image> output(factory->create(8, pvr.height, pvr.width, 4));
     
     if (pvr.data) {
-        uint8_t* rowp = output->rowp_as<uint8_t>(0);
+        byte* rowp = output->rowp_as<byte>(0);
 #ifdef PVRTC_DEBUG
         printf("_pvrtc: Copying %i bytes of PVR memory data to output\n", pvr.width*pvr.height*4);
 #endif
