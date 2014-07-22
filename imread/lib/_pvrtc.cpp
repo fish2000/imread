@@ -35,7 +35,7 @@ std::auto_ptr<Image> PVRTCFormat::read(byte_source* src, ImageFactory* factory, 
 #ifdef PVRTC_DEBUG
         printf("_pvrtc: Copying %i bytes of PVR memory data to output\n", pvr.width*pvr.height*4);
 #endif
-        memcpy(&rowp, &pvr.data[0], pvr.width*pvr.height*4);
+        memcpy(rowp, &pvr.data[0], pvr.width*pvr.height*4);
     } else {
         throw CannotReadError("imread.imread._pvrtc: Error reading PVRTC file.");
     }
