@@ -27,20 +27,21 @@ long_description = open('README.rst').read()
 undef_macros = []
 define_macros = []
 
-if os.environ.get('DEBUG'):
-    undef_macros = ['NDEBUG']
-    if os.environ.get('DEBUG') == '2':
-        define_macros.append(
-            ('PVRTC_DEBUG', '1'))
-        define_macros.append(
-            ('_GLIBCXX_DEBUG', '1'))
+DEBUG = os.environ.get('DEBUG', False)
+EXCLUDE_WEBP = os.environ.get('EXCLUDE_WEBP', False)
 
 define_macros.append(
     ('NPY_NO_DEPRECATED_API', 'NPY_1_7_API_VERSION'))
 define_macros.append(
     ('PY_ARRAY_UNIQUE_SYMBOL', 'MahotasImread_PyArray_API_Symbol'))
 
-EXCLUDE_WEBP = os.environ.get('EXCLUDE_WEBP', False)
+if DEBUG:
+    undef_macros = ['NDEBUG']
+    if os.environ.get('DEBUG') == '2':
+        define_macros.append(
+            ('PVRTC_DEBUG', '1'))
+        define_macros.append(
+            ('_GLIBCXX_DEBUG', '1'))
 
 if EXCLUDE_WEBP:
     define_macros.append(
@@ -69,8 +70,7 @@ extensions = {
         'imread/lib/_lsm.cpp',
         'imread/lib/_png.cpp',
         'imread/lib/_tiff.cpp',
-        'imread/lib/_pvrtc.cpp',
-        ]
+        'imread/lib/_pvrtc.cpp']
     }
 
 
@@ -97,31 +97,29 @@ package_dir = { 'imread.tests': 'imread/tests' }
 package_data = { 'imread.tests': ['data/*.*', 'data/pvrsamples/*'] }
 
 classifiers = [
-'Development Status :: 4 - Beta',
-'Intended Audience :: Developers',
-'Intended Audience :: Science/Research',
-'Topic :: Multimedia',
-'Topic :: Scientific/Engineering :: Image Recognition',
-'Topic :: Software Development :: Libraries',
-'Programming Language :: Python',
-'Programming Language :: Python :: 3',
-'Programming Language :: C++',
-'License :: OSI Approved :: MIT License',
-]
+    'Development Status :: 4 - Beta',
+    'Intended Audience :: Developers',
+    'Intended Audience :: Science/Research',
+    'Topic :: Multimedia',
+    'Topic :: Scientific/Engineering :: Image Recognition',
+    'Topic :: Software Development :: Libraries',
+    'Programming Language :: Python',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: C++',
+    'License :: OSI Approved :: MIT License']
 
-setuptools.setup(name = 'imread',
-      version = __version__,
-      description = 'imread: Image reading library',
-      long_description = long_description,
-      author = 'Luis Pedro Coelho',
-      author_email = 'luis@luispedro.org',
-      license = 'MIT',
-      platforms = ['Any'],
-      classifiers = classifiers,
-      url = 'http://luispedro.org/software/imread',
-      packages = packages,
-      ext_modules = ext_modules,
-      package_dir = package_dir,
-      package_data = package_data,
-      test_suite = 'nose.collector',
-      )
+setuptools.setup(name='imread',
+    version=__version__,
+    description='imread: Image reading library',
+    long_description=long_description,
+    author='Luis Pedro Coelho',
+    author_email='luis@luispedro.org',
+    license='MIT',
+    platforms=['Any'],
+    classifiers=classifiers,
+    url='http://luispedro.org/software/imread',
+    packages=packages,
+    ext_modules=ext_modules,
+    package_dir=package_dir,
+    package_data=package_data,
+    test_suite='nose.collector')

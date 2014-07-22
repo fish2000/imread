@@ -26,15 +26,20 @@ def readxcf(xcf_filename, formatstr, _flags):
     -------
     im : ndarray
     '''
-    from os import system, unlink
+    from os import system
     from tempfile import NamedTemporaryFile
+    from distutils.spawn import find_executable as which
+
     if formatstr != 'xcf':
         raise ValueError('imread.imread.readxcf: Format string must be \'xcf\'')
+
+    if not which('xcf2png'):
+        raise OSError('imread.readxcf: xcf format is only supported through the xcf2png utility, which imread could not find')
 
     N = NamedTemporaryFile(suffix='.png')
     output = system('xcf2png %s >%s' % (xcf_filename,N.name))
     if output:
-        raise OSError('imread.readxcf: xcf format is only supported through the xcf2png utility, which imread could not run')
+        raise OSError('imread.readxcf: xcf format is only supported through the xcf2png utility, which failed to run')
     return imread.imread(N.name, return_metadata=True)
 
 special = {
