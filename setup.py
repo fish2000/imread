@@ -18,6 +18,7 @@ On linux, the package is often called python-setuptools''')
 import os
 import numpy as np
 
+__version__ = "<undefined>"
 exec(compile(open('imread/imread_version.py').read(),
              'imread/imread_version.py', 'exec'))
 
@@ -29,6 +30,8 @@ define_macros = []
 if os.environ.get('DEBUG'):
     undef_macros = ['NDEBUG']
     if os.environ.get('DEBUG') == '2':
+        define_macros.append(
+            ('PVRTC_DEBUG', '1'))
         define_macros.append(
             ('_GLIBCXX_DEBUG', '1'))
 
@@ -67,8 +70,8 @@ extensions = {
         'imread/lib/_png.cpp',
         'imread/lib/_tiff.cpp',
         'imread/lib/_pvrtc.cpp',
-        ],
-}
+        ]
+    }
 
 
 libraries = ['png', 'jpeg', 'tiff', 'z']
@@ -80,9 +83,8 @@ if not EXCLUDE_WEBP:
     libraries.append('webp')
 
 ext_modules = [
-    setuptools.Extension(
-        key,
-        libraries = libraries,
+    setuptools.Extension(key,
+        libraries=libraries,
         library_dirs=library_dirs,
         include_dirs=include_dirs,
         sources=sources,
