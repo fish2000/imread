@@ -27,8 +27,7 @@ long_description = open('README.rst').read()
 undef_macros = []
 define_macros = []
 
-DEBUG = os.environ.get('DEBUG', False)
-EXCLUDE_WEBP = os.environ.get('EXCLUDE_WEBP', False)
+DEBUG = os.environ.get('DEBUG', True)
 
 define_macros.append(
     ('NPY_NO_DEPRECATED_API', 'NPY_1_7_API_VERSION'))
@@ -39,13 +38,9 @@ if DEBUG:
     undef_macros = ['NDEBUG']
     if os.environ.get('DEBUG') == '2':
         define_macros.append(
-            ('PVRTC_DEBUG', '1'))
+            ('PYIMGC_DEBUG', '1'))
         define_macros.append(
             ('_GLIBCXX_DEBUG', '1'))
-
-if EXCLUDE_WEBP:
-    define_macros.append(
-        ('IMREAD_EXCLUDE_WEBP', '1'))
 
 include_dirs = [np.get_include()]
 library_dirs = []
@@ -78,10 +73,6 @@ libraries = ['png', 'jpeg', 'tiff', 'z']
 if sys.platform.startswith('win'):
     libraries.append('zlib')
 
-if not EXCLUDE_WEBP:
-    extensions['imread._imread'].append('imread/lib/_webp.cpp')
-    libraries.append('webp')
-
 ext_modules = [
     setuptools.Extension(key,
         libraries=libraries,
@@ -90,7 +81,12 @@ ext_modules = [
         sources=sources,
         undef_macros=undef_macros,
         define_macros=define_macros,
-        ) for key, sources in extensions.items()]
+        extra_compile_args=[
+            '-Wno-error=unused-command-line-argument-hard-error-in-future',
+            '-Wno-unused-function',
+            '-Wno-deprecated-writable-strings',
+            '-Qunused-arguments',
+        ]) for key, sources in extensions.items()]
 
 packages = setuptools.find_packages()
 package_dir = { 'imread.tests': 'imread/tests' }
