@@ -74,7 +74,7 @@ extensions = {
         'imread/lib/_png.cpp',
         'imread/lib/_tiff.cpp',
         'imread/lib/_pvrtc.cpp',
-        EXCLUDE_WEBP or 'imread/lib/_webp.cpp']
+        EXCLUDE_WEBP and None or 'imread/lib/_webp.cpp']
     }
 
 
