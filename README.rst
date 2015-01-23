@@ -104,13 +104,26 @@ Travis Build Status
 .. image:: https://travis-ci.org/fish2000/imread.png
        :target: https://travis-ci.org/fish2000/imread
 
-Python versions 2.6, 2.7 and 3.3 are officially supported.
+Python versions 2.6, 2.7, 3.3, and 3.4 are officially supported.
 
-Python 3.4 should also work (submit a bug report if it does not). Python 3.2
-(and earlier versions in the Python 3 series) are officially **not supported**.
+Python 3.2 (and earlier versions in the Python 3 series) are officially **not
+supported**. Patches will be accepted if they do not mess up anything else, but
+bug reports will not be considered.
 
 History
 ~~~~~~~
+
+Version 0.5.1 (2014-11-06)
+--------------------------
+- Improve tests to work after installation
+- Fix compilation in MSVC (patch by Christoph Gohlke)
+
+
+Version 0.5 (2014-10-16)
+------------------------
+- Add magic-number based format auto-detection
+- Auto detect whether webp is installed
+- Fix WebP reading (update to newer API)
 
 Version 0.4 (2014-07-21)
 ------------------------
@@ -155,7 +168,7 @@ Version 0.2.5 (2012-10-29)
 - More complete debug mode (export DEBUG=2 when building), more checks
 
 Version 0.2.4 (2012-06-26)
--------------------------
+--------------------------
 - Add lzw.cpp to source distribution
 - Support saving 16-bit TIFF
 - Better Mac OS support (patch from Alexander Bohn)

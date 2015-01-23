@@ -19,6 +19,10 @@ import os
 import numpy as np
 
 __version__ = "<undefined>"
+
+def has_webp():
+    return os.system("pkg-config --exists libwebp") == 0
+
 exec(compile(open('imread/imread_version.py').read(),
              'imread/imread_version.py', 'exec'))
 
@@ -28,6 +32,10 @@ undef_macros = []
 define_macros = []
 
 DEBUG = os.environ.get('DEBUG', True)
+
+EXCLUDE_WEBP = os.environ.get('EXCLUDE_WEBP')
+if EXCLUDE_WEBP is None:
+    EXCLUDE_WEBP = not has_webp()
 
 define_macros.append(
     ('NPY_NO_DEPRECATED_API', 'NPY_1_7_API_VERSION'))
