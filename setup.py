@@ -90,7 +90,6 @@ ext_modules = [
         undef_macros=undef_macros,
         define_macros=define_macros,
         extra_compile_args=[
-            '-Wno-error=unused-command-line-argument-hard-error-in-future',
             '-Wno-unused-function',
             '-Wno-deprecated-writable-strings',
             '-Qunused-arguments',
