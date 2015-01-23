@@ -73,13 +73,20 @@ extensions = {
         'imread/lib/_lsm.cpp',
         'imread/lib/_png.cpp',
         'imread/lib/_tiff.cpp',
-        'imread/lib/_pvrtc.cpp']
+        'imread/lib/_pvrtc.cpp',
+        EXCLUDE_WEBP or 'imread/lib/_webp.cpp']
     }
 
 
 libraries = ['png', 'jpeg', 'tiff', 'z']
 if sys.platform.startswith('win'):
     libraries.append('zlib')
+if not EXCLUDE_WEBP:
+    WEBP_PREFIX = '/usr/local/opt/webp'
+    libraries.append('webp')
+    if os.path.isdir(WEBP_PREFIX):
+        include_dirs.append(os.path.join(WEBP_PREFIX, 'include'))
+        library_dirs.append(os.path.join(WEBP_PREFIX, 'lib'))
 
 ext_modules = [
     setuptools.Extension(key,
