@@ -23,23 +23,22 @@ std::auto_ptr<ImageFormat> get_format(const char* format) {
     if (!strcmp(format, "lsm")) return std::auto_ptr<ImageFormat>(new LSMFormat);
     if (!strcmp(format, "tiff") || !strcmp(format, "tif")) return std::auto_ptr<ImageFormat>(new TIFFFormat);
     
-#if IMREAD_EXCLUDE_WEBP
-    if (!strcmp(format, "webp")) return std::auto_ptr<ImageFormat>(0);
-#else
-    if (!strcmp(format, "webp")) return std::auto_ptr<ImageFormat>(new WebPFormat);
-#endif
-
     if (!strcmp(format, "pvr")) return std::auto_ptr<ImageFormat>(new PVRTCFormat);
     if (!strcmp(format, "pvrtc")) return std::auto_ptr<ImageFormat>(new PVRTCFormat);
     
     if (!strcmp(format, "stk")) return std::auto_ptr<ImageFormat>(new STKFormat);
     if (!strcmp(format, "bmp")) return std::auto_ptr<ImageFormat>(new BMPFormat);
+    
+#if IMREAD_EXCLUDE_WEBP
+    if (!strcmp(format, "webp")) return std::auto_ptr<ImageFormat>(0);
+#else
+    if (!strcmp(format, "webp")) return std::auto_ptr<ImageFormat>(new WebPFormat);
+#endif
     return std::auto_ptr<ImageFormat>(0);
 }
 
 const char* magic_format(byte_source* src) {
     if (PNGFormat::match_format(src)) return "png";
     if (JPEGFormat::match_format(src)) return "jpeg";
-    //if (PVRTCFormat::match_format(src)) return "pvr";
     return 0;
 }

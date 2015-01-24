@@ -29,8 +29,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-unsigned int countBits(unsigned int x)
-{
+unsigned int countBits(unsigned int x) {
     x  = x - ((x >> 1) & 0x55555555);
     x  = (x & 0x33333333) + ((x >> 2) & 0x33333333);
     x  = x + (x >> 4);
@@ -38,10 +37,9 @@ unsigned int countBits(unsigned int x)
     return (x * 0x01010101) >> 24;
 }
 
-typedef struct
-{
+typedef struct {
     uint32_t PackedData[2];
-}AMTC_BLOCK_STRUCT;
+} AMTC_BLOCK_STRUCT;
 
 const unsigned int PVRTEX_CUBEMAP               = (1<<12);
 
@@ -50,7 +48,7 @@ extern void Decompress(AMTC_BLOCK_STRUCT *pCompressedData,
                        const int XDim,
                        const int YDim,
                        const int AssumeImageTiles,
-                       unsigned char* pResultImage);
+                       unsigned char *pResultImage);
 
 /*******************************************************************************
   This PVR code is loosely based on Wolfgang Engel's Oolong Engine:
@@ -60,8 +58,7 @@ extern void Decompress(AMTC_BLOCK_STRUCT *pCompressedData,
     Thank you, Wolfgang!
  ******************************************************************************/
 
-const char *typeStrings[] =
-{
+const char *typeStrings[] = {
     "<invalid>", "<invalid>", "<invalid>", "<invalid>",
     "<invalid>", "<invalid>", "<invalid>", "<invalid>",
     "<invalid>", "<invalid>", "<invalid>", "<invalid>",
@@ -71,8 +68,7 @@ const char *typeStrings[] =
     "PVRTC2", "PVRTC4"
 };
 
-typedef struct PVRHeader
-{
+typedef struct PVRHeader {
     uint32_t      size;
     uint32_t      height;
     uint32_t      width;
@@ -88,27 +84,20 @@ typedef struct PVRHeader
     uint32_t      numtex;
 } PVRHeader;
 
-PVRTexture::PVRTexture()
-:data(NULL)
-{
+PVRTexture::PVRTexture() : data(NULL) {}
+
+PVRTexture::~PVRTexture() {
+    if (this->data) { free(this->data); }
 }
 
-PVRTexture::~PVRTexture()
-{
-    if(this->data)
-        free(this->data);
-}
-
-bool PVRTexture::loadApplePVRTC(uint8_t* data, int size)
-{
+bool PVRTexture::loadApplePVRTC(uint8_t* data, int size) {
     // additional heuristic
-    if(size>sizeof(PVRHeader))
-    {
+    if (size > sizeof(PVRHeader)) {
         PVRHeader *header = (PVRHeader *)data;
-        if( header->size == sizeof( PVRHeader )
-        &&( header->magic == 0x21525650 ) )
+        if (header->size == sizeof(PVRHeader) && (header->magic == 0x21525650)) {
             // this looks more like a PowerVR file.
             return false;
+        }
     }
 
     // default to 2bpp, 8x8
@@ -116,324 +105,279 @@ bool PVRTexture::loadApplePVRTC(uint8_t* data, int size)
     int res = 8;
 
     // this is a tough one, could be 2bpp 8x8, 4bpp 8x8
-    if(size==32)
-    {
+    if (size == 32) {
         // assume 4bpp, 8x8
         mode = 0;
         res = 8;
-    } else
-    {
+    } else {
         // Detect if it's 2bpp or 4bpp
         int shift = 0;
         int test2bpp = 0x40; // 16x16
         int test4bpp = 0x80; // 16x16
 
-        while(shift<10)
-        {
-            int s2 = shift<<1;
-
-            if((test2bpp<<s2)&size)
-            {
-                res = 16<<shift;
+        while (shift < 10) {
+            int s2 = shift << 1;
+            if ((test2bpp << s2) & size) {
+                res = 16 << shift;
                 mode = 1;
                 this->format = "PVRTC2";
                 break;
             }
-
-            if((test4bpp<<s2)&size)
-            {
-                res = 16<<shift;
+            if ((test4bpp << s2) & size) {
+                res = 16 << shift;
                 mode = 0;
                 this->format = "PVRTC4";
                 break;
             }
-
-
             ++shift;
         }
-
-        if(shift==10)
+        
+        if (shift == 10) {
             // no mode could be found.
             return false;
-#ifdef PVRTC_DEBUG
-        printf("pvr.cpp: detected apple %ix%i %i bpp pvrtc\n", res, res, mode*2+2);
-#endif
+        }
     }
 
     // there is no reliable way to know if it's a 2bpp or 4bpp file. Assuming
     this->width = res;
     this->height = res;
-    this->bpp = (mode+1)*2;
+    this->bpp = (mode + 1) * 2;
     this->numMips = 0;
-    this->data = (uint8_t*)malloc(this->width*this->height*4);
-
-    Decompress((AMTC_BLOCK_STRUCT*)data, mode, this->width,
-                    this->height, 0, this->data);
-
-    for(int y=0; y<res/2; ++y)
-    for(int x=0; x<res; ++x)
-    {
-        int src = (x+y*res)*4;
-        int dst = (x+(res-y-1)*res)*4;
-
-        for(int c=0; c<4; ++c)
-        {
-            uint8_t tmp = this->data[src+c];
-            this->data[src+c] = this->data[dst+c];
-            this->data[dst+c] = tmp;
+    this->data = (uint8_t *)malloc(this->width * this->height * 4);
+    
+    Decompress((AMTC_BLOCK_STRUCT *)data, mode,
+                this->width, this->height, 0,
+                this->data);
+    
+    for (int y = 0; y < res / 2; ++y) {
+        for (int x = 0; x < res; ++x) {
+            int src = (x + y * res) * 4;
+            int dst = (x + (res - y - 1) * res) * 4;
+            for (int c = 0; c < 4; ++c) {
+                uint8_t tmp = this->data[src+c];
+                this->data[src+c] = this->data[dst+c];
+                this->data[dst+c] = tmp;
+            }
         }
     }
 
     return true;
 }
 
-ePVRLoadResult PVRTexture::load(uint8_t* data, unsigned int length)
-{
+ePVRLoadResult PVRTexture::load(uint8_t* data, unsigned int length) {
 
     // use a heuristic to detect potential apple PVRTC formats
-    if(countBits(length)==1)
-    {
+    if (countBits(length) == 1) {
         // very likely to be apple PVRTC
-        if(loadApplePVRTC(data, length))
-            return PVR_LOAD_OKAY;
+        if (loadApplePVRTC(data, length)) { return PVR_LOAD_OKAY; }
     }
-
-    if(length<sizeof(PVRHeader))
-    {
+    
+    if (length < sizeof(PVRHeader)) {
         return PVR_LOAD_INVALID_FILE;
     }
 
     // parse the header
     uint8_t* p = data;
     PVRHeader *header = (PVRHeader *)p;
-    p += sizeof( PVRHeader );
-
-    if( header->size != sizeof( PVRHeader ) )
-    {
+    p += sizeof(PVRHeader);
+    
+    if (header->size != sizeof(PVRHeader)) {
         return PVR_LOAD_INVALID_FILE;
     }
-
-    if( header->magic != 0x21525650 )
-    {
+    
+    if (header->magic != 0x21525650) {
         return PVR_LOAD_INVALID_FILE;
     }
-
-    if(header->numtex<1)
-    {
-        header->numtex = (header->flags & PVRTEX_CUBEMAP)?6:1;
+    
+    if (header->numtex < 1) {
+        header->numtex = (header->flags & PVRTEX_CUBEMAP) ? 6 : 1;
     }
-
-    if( header->numtex != 1 )
-    {
+    
+    if (header->numtex != 1) {
         return PVR_LOAD_MORE_THAN_ONE_SURFACE;
     }
-
-    if(header->width*header->height*header->bpp/8 > length-sizeof(PVRHeader))
-    {
+    
+    if (header->width * header->height * header->bpp / 8 > length - sizeof(PVRHeader)) {
         return PVR_LOAD_INVALID_FILE;
     }
-
+    
     int ptype = header->flags & PVR_PIXELTYPE_MASK;
-
-#ifdef PVRTC_DEBUG
-    printf("pvr.cpp: Pixeltype: 0x%02x\n", ptype);
-#endif
-
+    
     this->width = header->width;
     this->height = header->height;
     this->numMips = header->mipcount;
     this->bpp = header->bpp;
-
-#ifdef PVRTC_DEBUG
-    printf("pvr.cpp: Width: %i\n", this->width);
-    printf("pvr.cpp: Height: %i\n", this->height);
-#endif
-
-    this->data = (uint8_t*)malloc(this->width*this->height*4);
-
-    if(ptype<PVR_MAX_TYPE)
+    this->data = (uint8_t *)malloc(this->width * this->height * 4);
+    
+    if (ptype < PVR_MAX_TYPE) {
         this->format = typeStrings[ptype];
-    else
+    } else {
         this->format = "<unknown>";
-
-    switch(ptype)
-    {
-    case PVR_TYPE_RGBA4444:
-        {
-            uint8_t *in  = p;
-            uint8_t *out = this->data;
-            for(int y=0; y<this->height; ++y)
-            for(int x=0; x<this->width; ++x)
-            {
-                int v1 = *in++;
-                int v2 = *in++;
-
-                uint8_t a = (v1&0x0f)<<4;
-                uint8_t b = (v1&0xf0);
-                uint8_t g = (v2&0x0f)<<4;
-                uint8_t r = (v2&0xf0);
-
-                *out++ = r;
-                *out++ = g;
-                *out++ = b;
-                *out++ = a;
-            }
-        }
-        break;
-    case PVR_TYPE_RGBA5551:
-        {
-            uint8_t *in  = p;
-            uint8_t *out = this->data;
-            for(int y=0; y<this->height; ++y)
-            for(int x=0; x<this->width; ++x)
-            {
-                unsigned short v = *(unsigned short*)in;
-                in += 2;
-
-                uint8_t r = (v&0xf800)>>8;
-                uint8_t g = (v&0x07c0)>>3;
-                uint8_t b = (v&0x003e)<<2;
-                uint8_t a = (v&0x0001)?255:0;
-
-                *out++ = r;
-                *out++ = g;
-                *out++ = b;
-                *out++ = a;
-            }
-        }
-        break;
-    case PVR_TYPE_RGBA8888:
-        {
-            uint8_t *in  = p;
-            uint8_t *out = this->data;
-            for(int y=0; y<this->height; ++y)
-            for(int x=0; x<this->width; ++x)
-            {
-                *out++ = *in++;
-                *out++ = *in++;
-                *out++ = *in++;
-                *out++ = *in++;
-            }
-        }
-        break;
-    case PVR_TYPE_RGB565:
-        {
-            uint8_t *in  = p;
-            uint8_t *out = this->data;
-            for(int y=0; y<this->height; ++y)
-            for(int x=0; x<this->width; ++x)
-            {
-                short v = *(short*)in;
-                in += 2;
-
-
-                uint8_t b = (v&0x001f)<<3;
-                uint8_t g = (v&0x07e0)>>3;
-                uint8_t r = (v&0xf800)>>8;
-                uint8_t a = 255;
-
-#ifdef PVRTC_DEBUG
-                if(x==128&&y==128)
-                {
-                    printf("pvr.cpp: %04x\n", v);
-                    printf("pvr.cpp: %i %i %i\n", r, g, b);
-                }
-#endif
-
-                *out++ = r;
-                *out++ = g;
-                *out++ = b;
-                *out++ = a;
-            }
-        }
-        break;
-    case PVR_TYPE_RGB555:
-        {
-            uint8_t *in  = p;
-            uint8_t *out = this->data;
-            for(int y=0; y<this->height; ++y)
-            for(int x=0; x<this->width; ++x)
-            {
-                short v = *(short*)in;
-                in += 2;
-
-                uint8_t r = (v&0x001f)<<3;
-                uint8_t g = (v&0x03e0)>>2;
-                uint8_t b = (v&0x7c00)>>7;
-                uint8_t a = 255;
-
-                *out++ = r;
-                *out++ = g;
-                *out++ = b;
-                *out++ = a;
-            }
-        }
-        break;
-    case PVR_TYPE_RGB888:
-        {
-            uint8_t *in  = p;
-            uint8_t *out = this->data;
-            for(int y=0; y<this->height; ++y)
-            for(int x=0; x<this->width; ++x)
-            {
-                *out++ = *in++;
-                *out++ = *in++;
-                *out++ = *in++;
-                *out++ = 255;
-            }
-        }
-        break;
-    case PVR_TYPE_I8:
-        {
-            uint8_t *in  = p;
-            uint8_t *out = this->data;
-            for(int y=0; y<this->height; ++y)
-            for(int x=0; x<this->width; ++x)
-            {
-                int i = *in++;
-
-                *out++ = i;
-                *out++ = i;
-                *out++ = i;
-                *out++ = 255;
-            }
-        }
-        break;
-    case PVR_TYPE_AI8:
-        {
-            uint8_t *in  = p;
-            uint8_t *out = this->data;
-            for(int y=0; y<this->height; ++y)
-            for(int x=0; x<this->width; ++x)
-            {
-                int i = *in++;
-                int a = *in++;
-
-                *out++ = i;
-                *out++ = i;
-                *out++ = i;
-                *out++ = a;
-            }
-        }
-        break;
-    case PVR_TYPE_PVRTC2:
-        {
-            Decompress((AMTC_BLOCK_STRUCT*)p, 1, this->width,
-                    this->height, 1, this->data);
-        } break;
-    case PVR_TYPE_PVRTC4:
-        {
-            Decompress((AMTC_BLOCK_STRUCT*)p, 0, this->width,
-                    this->height, 1, this->data);
-        } break;
-    default:
-#ifdef PVRTC_DEBUG
-        printf("pvr.cpp: unknown PVR type %i!\n", ptype);
-#endif
-        free(this->data);
-        this->data = NULL;
-        return PVR_LOAD_UNKNOWN_TYPE;
     }
-
+    
+    switch (ptype) {
+        case PVR_TYPE_RGBA4444: {
+            uint8_t *in  = p;
+            uint8_t *out = this->data;
+            for (int y = 0; y < this->height; ++y) {
+                for (int x = 0; x < this->width; ++x) {
+                    int v1 = *in++;
+                    int v2 = *in++;
+                    uint8_t a = (v1 & 0x0f) << 4;
+                    uint8_t b = (v1 & 0xf0);
+                    uint8_t g = (v2 & 0x0f) << 4;
+                    uint8_t r = (v2 & 0xf0);
+                    *out++ = r;
+                    *out++ = g;
+                    *out++ = b;
+                    *out++ = a;
+                }
+            }
+        }
+        break;
+        
+        case PVR_TYPE_RGBA5551: {
+            uint8_t *in  = p;
+            uint8_t *out = this->data;
+            for (int y = 0; y < this->height; ++y) {
+                for (int x = 0; x < this->width; ++x) {
+                    unsigned short v = *(unsigned short *)in;
+                    in += 2;
+                    uint8_t r = (v & 0xf800) >> 8;
+                    uint8_t g = (v & 0x07c0) >> 3;
+                    uint8_t b = (v & 0x003e) << 2;
+                    uint8_t a = (v & 0x0001) ? 255 : 0;
+                    *out++ = r;
+                    *out++ = g;
+                    *out++ = b;
+                    *out++ = a;
+                }
+            }
+        }
+        break;
+        
+        case PVR_TYPE_RGBA8888: {
+            uint8_t *in  = p;
+            uint8_t *out = this->data;
+            for (int y = 0; y < this->height; ++y) {
+                for (int x = 0; x < this->width; ++x) {
+                    *out++ = *in++;
+                    *out++ = *in++;
+                    *out++ = *in++;
+                    *out++ = *in++;
+                }
+            }
+        }
+        break;
+        
+        case PVR_TYPE_RGB565: {
+            uint8_t *in  = p;
+            uint8_t *out = this->data;
+            for (int y = 0; y < this->height; ++y) {
+                for (int x = 0; x < this->width; ++x) {
+                    short v = *(short*)in;
+                    in += 2;
+                    uint8_t b = (v & 0x001f) << 3;
+                    uint8_t g = (v & 0x07e0) >> 3;
+                    uint8_t r = (v & 0xf800) >> 8;
+                    uint8_t a = 255;
+                    *out++ = r;
+                    *out++ = g;
+                    *out++ = b;
+                    *out++ = a;
+                }
+            }
+        }
+        break;
+        
+        case PVR_TYPE_RGB555: {
+            uint8_t *in  = p;
+            uint8_t *out = this->data;
+            for (int y = 0; y < this->height; ++y) {
+                for (int x = 0; x < this->width; ++x) {
+                    short v = *(short*)in;
+                    in += 2;
+                    uint8_t r = (v & 0x001f) << 3;
+                    uint8_t g = (v & 0x03e0) >> 2;
+                    uint8_t b = (v & 0x7c00) >> 7;
+                    uint8_t a = 255;
+                    *out++ = r;
+                    *out++ = g;
+                    *out++ = b;
+                    *out++ = a;
+                }
+            }
+        }
+        break;
+        
+        case PVR_TYPE_RGB888: {
+            uint8_t *in  = p;
+            uint8_t *out = this->data;
+            for (int y = 0; y < this->height; ++y) {
+                for(int x = 0; x < this->width; ++x) {
+                    *out++ = *in++;
+                    *out++ = *in++;
+                    *out++ = *in++;
+                    *out++ = 255;
+                }
+            }
+        }
+        break;
+        
+        case PVR_TYPE_I8: {
+            uint8_t *in  = p;
+            uint8_t *out = this->data;
+            for (int y = 0; y < this->height; ++y) {
+                for (int x = 0; x < this->width; ++x) {
+                    int i = *in++;
+                    *out++ = i;
+                    *out++ = i;
+                    *out++ = i;
+                    *out++ = 255;
+                }
+            }
+        }
+        break;
+        
+        case PVR_TYPE_AI8: {
+            uint8_t *in  = p;
+            uint8_t *out = this->data;
+            for (int y = 0; y < this->height; ++y) {
+                for (int x = 0; x < this->width; ++x) {
+                    int i = *in++;
+                    int a = *in++;
+                    *out++ = i;
+                    *out++ = i;
+                    *out++ = i;
+                    *out++ = a;
+                }
+            }
+        }
+        break;
+        
+        case PVR_TYPE_PVRTC2: {
+            Decompress((AMTC_BLOCK_STRUCT *)p, 1,
+                        this->width, this->height, 1,
+                        this->data);
+        }
+        break;
+        
+        case PVR_TYPE_PVRTC4: {
+            Decompress((AMTC_BLOCK_STRUCT *)p, 0,
+                        this->width, this->height, 1,
+                        this->data);
+        }
+        break;
+        
+        default: {
+#ifdef PVRTC_DEBUG
+            printf("pvr.cpp: unknown PVR type %i!\n", ptype);
+#endif
+            free(this->data);
+            this->data = NULL;
+            return PVR_LOAD_UNKNOWN_TYPE;
+        }
+    }
+    
     return PVR_LOAD_OKAY;
 }

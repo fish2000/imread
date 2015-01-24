@@ -10,9 +10,6 @@ class PVRTCFormat : public ImageFormat {
     public:
         bool can_read() const { return true; }
         bool can_write() const { return false; }
-
-        //static bool match_format(byte_source *src) { return match_magic(src, "PVR!", 4); }
-
         std::auto_ptr<Image> read(byte_source *src, ImageFactory *factory, const options_map &opts);
 };
 
