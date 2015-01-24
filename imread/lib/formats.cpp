@@ -40,5 +40,6 @@ std::auto_ptr<ImageFormat> get_format(const char* format) {
 const char* magic_format(byte_source* src) {
     if (PNGFormat::match_format(src)) return "png";
     if (JPEGFormat::match_format(src)) return "jpeg";
+    //if (PVRTCFormat::match_format(src)) return "pvr";
     return 0;
 }

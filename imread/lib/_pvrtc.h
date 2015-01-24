@@ -11,7 +11,9 @@ class PVRTCFormat : public ImageFormat {
         bool can_read() const { return true; }
         bool can_write() const { return false; }
 
-        std::auto_ptr<Image> read(byte_source* src, ImageFactory* factory, const options_map& opts);
+        //static bool match_format(byte_source *src) { return match_magic(src, "PVR!", 4); }
+
+        std::auto_ptr<Image> read(byte_source *src, ImageFactory *factory, const options_map &opts);
 };
 
 #endif // LPC_PVRTC_H_INCLUDE_GUARD_
