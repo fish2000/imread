@@ -61,12 +61,8 @@ typedef struct { uint32_t PackedData[2]; } AMTC_BLOCK_STRUCT;
  * Pre-condition: -
  *****************************************************************************/
 int util_number_is_power_2(unsigned input) {
-    unsigned minus1;
-
-    if (!input)
-        return 0;
-
-    minus1 = input - 1;
+    if (!input) { return 0; }
+    unsigned minus1 = input - 1;
     return ((input | minus1) == (input ^ minus1)) ? 1 : 0;
 }
 
@@ -118,12 +114,9 @@ static void Unpack5554Colour(const AMTC_BLOCK_STRUCT *pBlock,
             // set 4bit alpha fully on...
             */
             ABColours[i][3] = 0xF;
-        }
-        /*
-        // Else if colour has variable translucency
-        */
-        else {
+        } else {
             /*
+            // Else if colour has variable translucency:
             // Extract R and G (both 4 bit).
             // (Leave a space on the end for the replication of bits
             */
@@ -224,15 +217,13 @@ static void UnpackModulations(const AMTC_BLOCK_STRUCT *pBlock,
                 ModulationBits >>= 1;
             }
         } /*end for y*/
-    }
-    /*
-    // else its the 4bpp mode so each value has 2 bits
-    */
-    else {
+    } else {
+        /*
+        // else its the 4bpp mode so each value has 2 bits
+        */
         for (y = 0; y < BLK_Y_SIZE; y++) {
             for (x = 0; x < BLK_X_4BPP; x++) {
                 ModulationModes[y + StartY][x + StartX] = BlockModMode;
-
                 ModulationVals[y + StartY][x + StartX] = ModulationBits & 3;
                 ModulationBits >>= 2;
             }
@@ -263,10 +254,7 @@ static void InterpolateColours(const int ColourP[4], const int ColourQ[4],
                                const int Do2bitMode, const int x, const int y,
                                int Result[4]) {
     int u, v, uscale;
-    int k;
-
-    int tmp1, tmp2;
-
+    int k, tmp1, tmp2;
     int P[4], Q[4], R[4], S[4];
 
     /*
@@ -285,7 +273,6 @@ static void InterpolateColours(const int ColourP[4], const int ColourQ[4],
     v = (y & 0x3) | ((~y & 0x2) << 1);
     if (Do2bitMode) {
         u = (x & 0x7) | ((~x & 0x4) << 1);
-
     } else {
         u = (x & 0x3) | ((~x & 0x2) << 1);
     }
@@ -294,7 +281,6 @@ static void InterpolateColours(const int ColourP[4], const int ColourQ[4],
     // get the u and v scale amounts
     */
     v = v - BLK_Y_SIZE / 2;
-
     if (Do2bitMode) {
         u = u - BLK_X_2BPP / 2;
         uscale = 8;
@@ -371,7 +357,6 @@ static void GetModulationValue(int x, int y, const int Do2bitMode,
                                int *DoPT) {
     static const int RepVals0[4] = {0, 3, 5, 8};
     static const int RepVals1[4] = {0, 4, 4, 8};
-
     int ModVal;
 
     /*
